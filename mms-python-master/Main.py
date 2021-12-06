@@ -13,10 +13,13 @@ class MazeMapper:
             [int(MazeSize[0] / 2), int(MazeSize[1] / 2 - 1)],
             [int(MazeSize[0] / 2 - 1), int(MazeSize[1] / 2 - 1)]
         ]
-    Map = [
-            []
-        ]
+    Map = {}
     def MazeSetup():
+        for x in range(MazeMapper.MazeSize[1]):
+            MazeMapper.Map[x] = []
+            for y in range(MazeMapper.MazeSize[0]):
+                MazeMapper.Map[x].append(0)
+        log(MazeMapper.Map)
         API.setText(0, 0, "abc")
         for pos in MazeMapper.Finish:
             API.setColor(pos[0], pos[1], "A")
@@ -28,7 +31,9 @@ class MazeMapper:
         # 2 = east wall
         # 4 = south wall
         # 8 = west wall
-        pass
+            
+        Walls = 0
+        MazeMapper.Map[Movement.Position[1]][Movement.Position[0]] = Walls
 
 class Movement:
     Compas = ["North", "East", "South", "West"]
