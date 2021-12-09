@@ -13,12 +13,12 @@ class MazeMapper:
             [int(MazeSize[0] / 2), int(MazeSize[1] / 2 - 1)],
             [int(MazeSize[0] / 2 - 1), int(MazeSize[1] / 2 - 1)]
         ]
-    Map = {}
+    Map = []
     def MazeSetup():
         for x in range(MazeMapper.MazeSize[1]):
-            MazeMapper.Map[x] = []
+            MazeMapper.Map.append([])
             for y in range(MazeMapper.MazeSize[0]):
-                MazeMapper.Map[x].append(0)
+                MazeMapper.Map[x].append(15)
         log(MazeMapper.Map)
         API.setText(0, 0, "abc")
         for pos in MazeMapper.Finish:
@@ -31,9 +31,28 @@ class MazeMapper:
         # 2 = east wall
         # 4 = south wall
         # 8 = west wall
-            
+        # 15 = all wall
+        if API.wallLeft():
+            WallDirection = Movement.Direction - 1
+            if WallDirection < 0:
+                WallDirection += 4
+        if API.wallFront():
+            WallDirection = Movement.Direction
+        if API.wallRight():
+            WallDirection = Movement.Direction + 1
+            if WallDirection > 4:
+                WallDirection -= 4
         Walls = 0
+        if WallDirection == 0:
+            Walls += 1
+        elif WallDirection == 1:
+            Walls += 2
+        elif WallDirection == 2:
+            Walls += 4
+        elif WallDirection == 3:
+            Walls += 8
         MazeMapper.Map[Movement.Position[1]][Movement.Position[0]] = Walls
+        log(MazeMapper.Map)
 
 class Movement:
     Compas = ["North", "East", "South", "West"]
@@ -81,6 +100,7 @@ def main():
     MazeMapper.MazeSetup()
     while True:
         log(f"[{Movement.Position[0] + 1}, {Movement.Position[1] + 1}] [{Movement.Compas[Movement.Direction]}]")
+        MazeMapper.Mapper   ()
         if not API.wallLeft():
             Movement.Left()
         while API.wallFront():
